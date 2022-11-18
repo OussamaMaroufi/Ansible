@@ -20,9 +20,22 @@
     #     src: ./nodeapp-1.0.0.tgz
     #     dest: /root/nodeapp-1.0.0.tgz
     # the code bellow execute the tow tasks
-    - name: Unpack the node js file 
+    - name: Unpack the node js folder
       unarchive:
         src: ./nodeapp-1.0.0.tgz
         dest: /root/
         # remote_src: yes  
+    - name: Install dependencies 
+      npm:
+        path: /root/package
+    - name: Start the application 
+      command:
+        chdir : /root/package
+        cmd: npm start
+      async: 45
+      poll: 0
+    - name: Ensure app is running 
+      shell: ps aux | grep node 
+      register: app_status
+    - debug: msg={{app_status.stdout_lines}}
 
