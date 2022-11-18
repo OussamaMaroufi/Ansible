@@ -1,0 +1,28 @@
+---
+- name: Install node and npm 
+  hosts: 34.212.173.188
+  become: yes
+  tasks:
+    - name: Update apt repo and cache
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+    - name: Install nodejs and npm 
+      apt:
+        pkg:
+          - nodejs
+          - npm
+
+- name: Deploy node js app
+  hosts: 34.212.173.188
+  become: yes
+  tasks:
+    # - name: Copy node js folder to a server
+    #   copy:
+    #     src: ./nodeapp-1.0.0.tgz
+    #     dest: /root/nodeapp-1.0.0.tgz
+    # the code bellow execute the tow tasks
+    - name: Unpack the node js file 
+      unarchive:
+        src: ./nodeapp-1.0.0.tgz
+        dest: /root/
+        # remote_src: yes  
+
