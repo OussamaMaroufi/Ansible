@@ -1,7 +1,6 @@
 ---
 - name: Install node and npm 
   hosts: 34.212.173.188
-  become: yes
   tasks:
     - name: Update apt repo and cache
       apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
@@ -11,9 +10,23 @@
           - nodejs
           - npm
 
+# This play for security measure : run app with user that have less privilege
+- name: Create new linux user for node app 
+  hosts: 34.212.173.188
+  tasks:
+    - name: Create linux user
+      user:
+        name: Oussama
+        comment: Oussama Admin
+        group: admin
+
+
 - name: Deploy node js app
   hosts: 34.212.173.188
-  become: yes
+  # to enable you become another user different from the user u logged in with
+  become: True
+  # privilege escalation 
+  become_user: Oussama
   tasks:
     # - name: Copy node js folder to a server
     #   copy:
@@ -23,14 +36,14 @@
     - name: Unpack the node js folder
       unarchive:
         src: ./nodeapp-1.0.0.tgz
-        dest: /root/
+        dest: /home/Oussama
         # remote_src: yes  
     - name: Install dependencies 
       npm:
-        path: /root/package
+        path: /home/Oussama/package
     - name: Start the application 
       command:
-        chdir : /root/package
+        chdir : /home/Oussama/package
         cmd: npm start
       async: 45
       poll: 0
