@@ -1,2 +1,1 @@
-
-34.212.173.188 ansible_ssh_private_key_file=~/Downloads/KP-OREGON.pem ansible_user=ubuntu
+34.219.96.214 ansible_ssh_private_key_file=~/Downloads/KP-OREGON.pem ansible_user=ubuntu
