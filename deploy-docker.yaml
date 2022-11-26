@@ -1,0 +1,20 @@
+---
+
+- name: Install python3  and docker
+  hosts: docker_server
+  become: yes
+  # become_user: root by default root
+  tasks:
+    - name: Install python3  and docker
+      vars:
+        ansible_python_interpreter: /usr/bin/python
+      yum:
+        name:
+        - python3
+        - docker
+        update_cache: yes
+        state: present
+
+
+
+
