@@ -1,14 +1,16 @@
 ---
 - name: Configure nginx webserver
-  hosts: webserver
+  hosts: 34.219.96.214
   tasks:
   - name: install nginx server
     apt: 
-      name: nginx=1.18
+      name: nginx
       state: present
+    # become: yes
     
   - name: start nginx server
     service:
       name: nginx
       state: started
+    # become: yes
     

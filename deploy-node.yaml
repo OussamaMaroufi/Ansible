@@ -1,6 +1,8 @@
 ---
 - name: Install node and npm 
-  hosts: 34.212.173.188
+  hosts: 34.219.96.214
+  become: True
+  become_user: root
   tasks:
     - name: Update apt repo and cache
       apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
@@ -12,21 +14,36 @@
 
 # This play for security measure : run app with user that have less privilege
 - name: Create new linux user for node app 
-  hosts: 34.212.173.188
+  hosts: 34.219.96.214
+  become: True
+  become_user: root
+  vars_files:
+    - project-vars
   tasks:
     - name: Create linux user
       user:
-        name: Oussama
-        comment: Oussama Admin
+        name: "{{Name}}"
+        comment: "{{Name}} Admin"
         group: admin
+    #   register: user_creation_result
+    # - debug: msg={{user_creation_result}}
+      
+      
 
 
 - name: Deploy node js app
-  hosts: 34.212.173.188
+  hosts: 34.219.96.214
   # to enable you become another user different from the user u logged in with
   become: True
   # privilege escalation 
-  become_user: Oussama
+  become_user: root
+
+  vars_files:
+    - project-vars
+
+  # vars:
+  #   - destination: /home/{{Name}}
+    # - version: 1.0.0
   tasks:
     # - name: Copy node js folder to a server
     #   copy:
@@ -35,20 +52,21 @@
     # the code bellow execute the tow tasks
     - name: Unpack the node js folder
       unarchive:
-        src: ./nodeapp-1.0.0.tgz
-        dest: /home/Oussama
+        src: ./nodeapp-{{version}}.tgz
+        dest: "{{destination}}"
         # remote_src: yes  
     - name: Install dependencies 
       npm:
-        path: /home/Oussama/package
+        path: "{{destination}}/package"
     - name: Start the application 
       command:
-        chdir : /home/Oussama/package
+        chdir : "{{destination}}/package"
         cmd: npm start
       async: 45
       poll: 0
     - name: Ensure app is running 
       shell: ps aux | grep node 
+      # to register the output of cmd in variable 
       register: app_status
     - debug: msg={{app_status.stdout_lines}}
 
