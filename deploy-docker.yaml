@@ -27,6 +27,34 @@
       mode: +x
 
 
+- name: Start docker
+  hosts: docker_server
+  become: yes
+  tasks:
+  - name: start docker daemon 
+    systemd:
+      name: docker
+      state: started
+
+- name: Add ec2-user to docker group 
+  hosts: docker_server
+  become: yes
+  tasks:
+    - name: add ec2-user to docker group
+      user: 
+        name: ec2-user
+        groups: docker
+        append: yes 
+    - name: Reconnect to server session
+      meta: reset_connection
+
+- name: Test docker pull
+  hosts: docker_server
+  tasks:
+    - name: Pull redis
+      command: docker pull redis
+
+
 
 
 
