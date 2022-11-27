@@ -1,4 +1,4 @@
 34.219.96.214 ansible_ssh_private_key_file=~/Downloads/KP-OREGON.pem ansible_user=ubuntu
 
 [docker_server]
-34.219.101.98 ansible_ssh_private_key_file=~/Downloads/KP-OREGON.pem ansible_user=ec2-user
+52.10.154.165 ansible_ssh_private_key_file=~/Downloads/KP-OREGON.pem ansible_user=ec2-user
